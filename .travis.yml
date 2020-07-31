@@ -1,0 +1,14 @@
+services:
+- docker
+install:
+- pip install --user awscli
+before_script:
+- echo "no before scripts actions"
+script:
+- docker --version
+- docker build -t udagram-reverse-proxy .
+- docker tag udagram-reverse-proxy:latest 998443328643.dkr.ecr.us-east-1.amazonaws.com/udagram-reverse-proxy:latest
+after_success:
+- aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin
+  998443328643.dkr.ecr.us-east-1.amazonaws.com
+- docker push 998443328643.dkr.ecr.us-east-1.amazonaws.com/udagram-reverse-proxy:latest
